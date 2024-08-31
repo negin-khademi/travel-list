@@ -6,11 +6,16 @@ export default function App() {
   function handleAddItems(item) {
     setItems((items) => [...items, item]);
   }
+
+  function handleDeletItem(id) {
+    setItems((items) => items.filter((item) => item.id !== id));
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackageList items={items} />
+      <PackageList onDeleteItem={handleDeletItem} items={items} />
       <Stats />
     </div>
   );
@@ -47,25 +52,25 @@ function Form({ onAddItems }) {
     </form>
   );
 }
-function PackageList({ items }) {
+function PackageList({ items, onDeleteItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} />
+          <Item onDeleteItem={onDeleteItem} item={item} />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDeleteItem }) {
   return (
     <li>
       <span style={item.packed ? { textDecoration: 'line-through' } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
     </li>
   );
 }
